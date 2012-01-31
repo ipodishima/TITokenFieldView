@@ -147,6 +147,10 @@ CGFloat const kSeparatorHeight = 1;
 	[self layoutSubviews];
 }
 
+- (void) setBackgroundColor:(UIColor*)backgroundColor {
+    tokenField.backgroundColor = backgroundColor;
+}
+
 - (void)setContentOffset:(CGPoint)offset {
 	
 	[super setContentOffset:offset];
@@ -712,6 +716,7 @@ typedef void (^AnimationBlock)();
 	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(8, 11, titleSize.width , titleSize.height)];
 	[label setTag:123];
 	[label setText:aText];
+    [label setBackgroundColor:[UIColor clearColor]];
 	[label setFont:[UIFont systemFontOfSize:15]];
 	[label setTextColor:[UIColor colorWithWhite:0.5 alpha:1]];
 	[label sizeToFit];
