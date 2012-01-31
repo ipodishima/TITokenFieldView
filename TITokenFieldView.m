@@ -312,6 +312,18 @@ CGFloat const kSeparatorHeight = 1;
 	return YES;
 }
 
+- (CGFloat) getWidthForTokensWithNumber:(NSInteger)number resultString:(NSString**)resultString
+{
+    NSArray *subarray = tokenTitles;
+    if (number != -1 && number < tokenTitles.count)
+        subarray = [tokenTitles subarrayWithRange:NSMakeRange(0, number)];
+    
+    NSString * untokenized = [subarray componentsJoinedByString:@", "];
+    *resultString = untokenized;
+	CGSize untokSize = [untokenized sizeWithFont:tokenField.font];
+    return untokSize.width;
+}
+
 - (void)textFieldDidEndEditing:(UITextField *)textField {
 	
 	NSArray * tokens = [[NSArray alloc] initWithArray:tokenField.tokensArray];
@@ -320,20 +332,31 @@ CGFloat const kSeparatorHeight = 1;
 	
 	[self setTokenTitles:[tokenField getTokenTitles]];
 	
-	NSString * untokenized = [tokenTitles componentsJoinedByString:@", "];
-	CGSize untokSize = [untokenized sizeWithFont:[UIFont systemFontOfSize:14]];
+    NSString *untokenized;
+    
+	CGFloat width = [self getWidthForTokensWithNumber:-1 resultString:&untokenized];
 	
 	[tokenField.tokensArray removeAllObjects];
 	[tokenField updateHeight:YES];
 	
-	if (untokSize.width > self.frame.size.width - 120){
+	if (width > self.frame.size.width - CGRectGetMaxX(tokenField.promptLabel.frame)) {
+        
+        NSInteger currentNumber = 0;
+        NSString *resultString;
+        
         NSString *suffixe = nil;
         if ([self.delegate respondsToSelector:@selector(tokenField:wantsToKnowSuffixForTokensNumber:)])
             suffixe = [self.delegate tokenField:tokenField wantsToKnowSuffixForTokensNumber:tokenTitles.count];
         else
             suffixe = @"recipients";
+        do {
+            currentNumber ++;
+        } while ([self getWidthForTokensWithNumber:currentNumber resultString:&resultString] < self.frame.size.width - CGRectGetMaxX(tokenField.promptLabel.frame) - [[NSString stringWithFormat:@" & %d %@", tokenTitles.count-currentNumber, suffixe] sizeWithFont:tokenField.font].width);
         
-		untokenized = [NSString stringWithFormat:@"%d %@", tokenTitles.count, suffixe];
+        currentNumber --;
+        [self getWidthForTokensWithNumber:currentNumber resultString:&resultString];
+        
+		untokenized = [NSString stringWithFormat:@"%@ & %d %@", resultString, tokenTitles.count-currentNumber, suffixe];
 	}
 	
 	[textField setText:untokenized];
