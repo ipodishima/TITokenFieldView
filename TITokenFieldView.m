@@ -143,7 +143,7 @@ CGFloat const kSeparatorHeight = 1;
 	[tokenField updateHeight:YES];
 	[self updateContentSize];
 	
-	[self layoutSubviews];
+	[self setNeedsLayout];
 }
 
 - (void) setBackgroundColor:(UIColor*)backgroundColor {
@@ -153,7 +153,7 @@ CGFloat const kSeparatorHeight = 1;
 - (void)setContentOffset:(CGPoint)offset {
 	
 	[super setContentOffset:offset];
-	[self layoutSubviews];
+	[self setNeedsLayout];
 }
 
 - (void) setShowSeparator:(BOOL)show {
