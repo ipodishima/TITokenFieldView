@@ -67,6 +67,7 @@
 @synthesize tokenTitles;
 
 @synthesize tokenField;
+@synthesize showSeparator;
 
 NSString * const kTextEmpty = @" "; // Just a space
 NSString * const kTextHidden = @"`"; // This character isn't available on the iPhone (yet) so it's safe.
@@ -102,11 +103,6 @@ CGFloat const kSeparatorHeight = 1;
 		[tokenField setDelegate:self];
 		[self addSubview:tokenField];
 		[tokenField release];
-		
-		separator = [[UIView alloc] initWithFrame:CGRectMake(0, kTokenFieldHeight, self.frame.size.width, kSeparatorHeight)];
-		[separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:1]];
-		[self addSubview:separator];
-		[separator release];
 		
 		resultsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, kTokenFieldHeight + 1, self.frame.size.width, 10)];
 		[resultsTable setSeparatorColor:[UIColor colorWithWhite:0.85 alpha:1]];
@@ -157,6 +153,16 @@ CGFloat const kSeparatorHeight = 1;
 	[self layoutSubviews];
 }
 
+- (void) setShowSeparator:(BOOL)show {
+    if (show) {
+        if (!separator)
+            separator = [[UIView alloc] initWithFrame:CGRectMake(0, kTokenFieldHeight, self.frame.size.width, kSeparatorHeight)];
+		[separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:1]];
+		[self addSubview:separator];
+    }
+    else
+        [separator removeFromSuperview];
+}
 - (void)layoutSubviews {
 	
 	CGFloat relativeFieldHeight = tokenField.frame.size.height - self.contentOffset.y;
@@ -456,6 +462,7 @@ CGFloat const kSeparatorHeight = 1;
 	[tokenTitles release];
 	[resultsArray release];
 	[sourceArray release];
+    [separator release];
 	[super dealloc];
 }
 

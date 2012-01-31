@@ -87,6 +87,7 @@
 @property (nonatomic, copy) NSArray * sourceArray;
 @property (nonatomic, readonly, retain) NSArray * tokenTitles;
 @property (nonatomic, readonly) TITokenField * tokenField;
+@property (nonatomic, assign) BOOL showSeparator;
 
 - (void)updateContentSize;
 @end
