@@ -124,7 +124,7 @@
 
 - (void)setAddButtonAction:(SEL)action target:(id)sender;
 - (void)setPromptText:(NSString *)aText;
-
+- (void)setPromptText:(NSString *)aText withFont:(UIFont*)font;
 @end
 
 //==========================================================

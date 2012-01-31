@@ -741,14 +741,17 @@ typedef void (^AnimationBlock)();
 }
 
 - (void)setPromptText:(NSString *)aText {
+    [self setPromptText:aText withFont:[UIFont systemFontOfSize:15]];
+}
+
+- (void)setPromptText:(NSString *)aText withFont:(UIFont*)font {
+    [_promptLabel removeFromSuperview];
 	
-	[_promptLabel removeFromSuperview];
-	
-	CGSize titleSize = [aText sizeWithFont:[UIFont systemFontOfSize:17]];
+	CGSize titleSize = [aText sizeWithFont:[UIFont fontWithName:font.fontName size:font.pointSize+2]];
 	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(8, 11, titleSize.width , titleSize.height)];
 	[label setText:aText];
     [label setBackgroundColor:[UIColor clearColor]];
-	[label setFont:[UIFont systemFontOfSize:15]];
+	[label setFont:font];
 	[label setTextColor:[UIColor colorWithWhite:0.5 alpha:1]];
 	[label sizeToFit];
 	[self addSubview:label];
