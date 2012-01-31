@@ -259,6 +259,10 @@ CGFloat const kSeparatorHeight = 1;
     [resultsTable reloadData];
 	
 	[tokenField updateHeight:NO];
+    
+    if ([delegate respondsToSelector:@selector(tokenFieldDidBeginEditing:)]) {
+        [delegate tokenFieldDidBeginEditing:tokenField];
+    }
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
@@ -288,6 +292,10 @@ CGFloat const kSeparatorHeight = 1;
 	
 	[textFieldShadow setHidden:YES];
 	[resultsTable setHidden:YES];
+    
+    if ([delegate respondsToSelector:@selector(tokenFieldDidEndEditing:)]) {
+        [delegate tokenFieldDidEndEditing:tokenField];
+    }
 	
 }
 
@@ -870,7 +878,7 @@ typedef void (^AnimationBlock)();
 	CGFloat locations[2] = {0, highlighted ? 0.8 : 0.4};
     CGFloat highlightedComp[8] = {red, green, blue, .6, red, green, blue, 1};
     CGFloat nonHighlightedComp[8] = {red, green, blue, .2, red, green, blue, .4};
-	 
+     
 	CGGradientRef gradient = CGGradientCreateWithColorComponents (colorspace, highlighted ? highlightedComp : nonHighlightedComp, locations, 2);
 	CGContextDrawLinearGradient(context, gradient, CGPointZero, endPoint, 0);
 	CGGradientRelease(gradient);

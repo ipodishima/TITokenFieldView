@@ -37,6 +37,8 @@
 @protocol TITokenFieldViewDelegate <UIScrollViewDelegate>
 @optional
 - (BOOL)tokenFieldShouldReturn:(TITokenField *)tokenField;
+- (void)tokenFieldDidBeginEditing:(TITokenField *)tokenField;
+- (void)tokenFieldDidEndEditing:(TITokenField *)tokenField;
 
 - (void)tokenField:(TITokenField *)tokenField didChangeToFrame:(CGRect)frame;
 - (void)tokenFieldTextDidChange:(TITokenField *)tokenField;
