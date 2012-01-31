@@ -692,14 +692,8 @@ typedef void (^AnimationBlock)();
 			[parentView.contentView setOriginY:newHeight];
 			[self setHeight:newHeight];
 		};
-		
-		if (previousHeight < newHeight){
-			[UIView animateWithDuration:0.3 animations:^{animationBlock();}];
-		}
-		else
-		{
-			animationBlock();
-		}
+        
+        [UIView animateWithDuration:0.3 animations:animationBlock];
 		
 		[parentView tokenFieldResized:self];
 	}
