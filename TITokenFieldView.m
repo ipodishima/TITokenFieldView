@@ -240,15 +240,17 @@ CGFloat const kSeparatorHeight = 1;
 	if ([delegate respondsToSelector:@selector(tokenField:didFinishSearch:)]){
 		[delegate tokenField:tokenField didFinishSearch:resultsArray];
 	}
-	
-	BOOL hideTable = !resultsArray.count;
-	[resultsTable setHidden:hideTable];
-	[textFieldShadow setHidden:hideTable];
-	[tokenField scrollForEdit:!hideTable];
-	
-	UIColor * separatorColor = hideTable ? [UIColor colorWithWhite:0.7 alpha:1] : [UIColor colorWithRed:150/255 green:150/255 blue:150/255 alpha:0.4];
-	[separator setBackgroundColor:separatorColor];
-	
+    
+    if (_shouldMoveContent) {
+        BOOL hideTable = !resultsArray.count;
+        [resultsTable setHidden:hideTable];
+        [textFieldShadow setHidden:hideTable];
+        [tokenField scrollForEdit:!hideTable];
+        
+        UIColor * separatorColor = hideTable ? [UIColor colorWithWhite:0.7 alpha:1] : [UIColor colorWithRed:150/255 green:150/255 blue:150/255 alpha:0.4];
+        [separator setBackgroundColor:separatorColor];
+	}
+    
 	return resultsArray.count;
 	
 }
@@ -435,8 +437,10 @@ CGFloat const kSeparatorHeight = 1;
 	// GCD would be great for that.
 	
 	[resultsArray removeAllObjects];
+    _shouldMoveContent = NO;
 	[resultsTable reloadData];
-	
+	_shouldMoveContent = YES;
+    
 	NSUInteger loc = [[substring substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "] ? 1 : 0;
 	NSString * typedString = [[substring substringWithRange:NSMakeRange(loc, substring.length - 1)] lowercaseString];
 	

@@ -75,6 +75,7 @@
 	
 	TITokenField * tokenField;
     UIImageView *_backgroundImageView;
+    BOOL _shouldMoveContent;
 }
 
 @property (nonatomic, assign) BOOL showAlreadyTokenized;
