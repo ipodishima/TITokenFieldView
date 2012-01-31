@@ -67,7 +67,9 @@
 @synthesize tokenTitles;
 
 @synthesize tokenField;
-@synthesize showSeparator;
+@synthesize showSeparator = _showSeparator;
+
+@synthesize backgroundStretchableImage = _backgroundStretchableImage;
 
 NSString * const kTextEmpty = @" "; // Just a space
 NSString * const kTextHidden = @"`"; // This character isn't available on the iPhone (yet) so it's safe.
@@ -154,6 +156,7 @@ CGFloat const kSeparatorHeight = 1;
 }
 
 - (void) setShowSeparator:(BOOL)show {
+    _showSeparator = show;
     if (show) {
         if (!separator)
             separator = [[UIView alloc] initWithFrame:CGRectMake(0, kTokenFieldHeight, self.frame.size.width, kSeparatorHeight)];
@@ -163,10 +166,30 @@ CGFloat const kSeparatorHeight = 1;
     else
         [separator removeFromSuperview];
 }
+
+- (void) setBackgroundStretchableImage:(UIImage*)image {
+    if (!_backgroundImageView) {
+        _backgroundImageView = [[UIImageView alloc] init];
+        [self insertSubview:_backgroundImageView atIndex:0];
+    }   
+    _backgroundImageView.image = image;
+    [_backgroundStretchableImage release];
+    _backgroundStretchableImage = [image retain];
+    
+    [self setNeedsLayout];
+}
+
 - (void)layoutSubviews {
 	
 	CGFloat relativeFieldHeight = tokenField.frame.size.height - self.contentOffset.y;
 	[resultsTable setHeight:(self.frame.size.height - relativeFieldHeight)];
+
+    CGFloat marginX = 3.0;
+    CGFloat marginY = 3.0;
+    _backgroundImageView.frame = CGRectMake(CGRectGetMaxX(self.tokenField.promptLabel.frame)+marginX,
+                                            marginY,
+                                            CGRectGetWidth(self.frame)- CGRectGetMaxX(self.tokenField.promptLabel.frame) - marginX*2.0,
+                                            CGRectGetHeight(self.tokenField.frame)-2*marginY);
 }
 
 - (void)updateContentSize {
@@ -463,6 +486,7 @@ CGFloat const kSeparatorHeight = 1;
 	[resultsArray release];
 	[sourceArray release];
     [separator release];
+    [_backgroundImageView release];
 	[super dealloc];
 }
 
@@ -480,6 +504,7 @@ CGFloat const kSeparatorHeight = 1;
 @synthesize addButton;
 @synthesize addButtonSelector;
 @synthesize addButtonTarget;
+@synthesize promptLabel = _promptLabel;
 
 - (id)initWithFrame:(CGRect)frame {
 	
@@ -574,7 +599,7 @@ CGFloat const kSeparatorHeight = 1;
 	CGFloat fontHeight = (self.font.ascender - self.font.descender) + 1;
 	CGFloat lineHeight = fontHeight + 15;
 	CGFloat topMargin = floor(fontHeight / 1.75);
-	CGFloat leftMargin = [self viewWithTag:123] ? [self viewWithTag:123].frame.size.width + 12 : 8;
+	CGFloat leftMargin = _promptLabel ? _promptLabel.frame.size.width + 14 : 8;
 	CGFloat rightMargin = 16;
 	CGFloat rightMarginWithButton = addButton.hidden ? 8 : 46;
 	CGFloat initialPadding = 8;
@@ -717,11 +742,10 @@ typedef void (^AnimationBlock)();
 
 - (void)setPromptText:(NSString *)aText {
 	
-	[[self viewWithTag:123] removeFromSuperview];
+	[_promptLabel removeFromSuperview];
 	
 	CGSize titleSize = [aText sizeWithFont:[UIFont systemFontOfSize:17]];
 	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(8, 11, titleSize.width , titleSize.height)];
-	[label setTag:123];
 	[label setText:aText];
     [label setBackgroundColor:[UIColor clearColor]];
 	[label setFont:[UIFont systemFontOfSize:15]];
@@ -729,7 +753,7 @@ typedef void (^AnimationBlock)();
 	[label sizeToFit];
 	[self addSubview:label];
 	[label release];
-	
+	_promptLabel = label;
 	[self layoutTokens];
 }
 
@@ -767,7 +791,7 @@ typedef void (^AnimationBlock)();
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<TITokenField %p 'Prompt: %@'>", self, ((UILabel *)[self viewWithTag:123]).text];
+	return [NSString stringWithFormat:@"<TITokenField %p 'Prompt: %@'>", self, _promptLabel.text];
 }
 
 - (void)dealloc {

@@ -74,6 +74,7 @@
 	NSArray * tokenTitles;
 	
 	TITokenField * tokenField;
+    UIImageView *_backgroundImageView;
 }
 
 @property (nonatomic, assign) BOOL showAlreadyTokenized;
@@ -88,6 +89,7 @@
 @property (nonatomic, readonly, retain) NSArray * tokenTitles;
 @property (nonatomic, readonly) TITokenField * tokenField;
 @property (nonatomic, assign) BOOL showSeparator;
+@property (nonatomic, retain) UIImage *backgroundStretchableImage;
 
 - (void)updateContentSize;
 @end
@@ -113,6 +115,7 @@
 @property (nonatomic, retain) UIButton * addButton;
 @property (nonatomic, assign) id addButtonTarget;
 @property (nonatomic, assign) SEL addButtonSelector;
+@property (nonatomic, readonly) UILabel *promptLabel;
 
 - (void)addToken:(NSString *)title;
 - (void)removeToken:(TIToken *)token;
