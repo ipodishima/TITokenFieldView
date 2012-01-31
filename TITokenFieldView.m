@@ -70,6 +70,7 @@
 @synthesize showSeparator = _showSeparator;
 
 @synthesize backgroundStretchableImage = _backgroundStretchableImage;
+@synthesize showBackgroundEntire = _showBackgroundEntire;
 
 NSString * const kTextEmpty = @" "; // Just a space
 NSString * const kTextHidden = @"`"; // This character isn't available on the iPhone (yet) so it's safe.
@@ -179,6 +180,12 @@ CGFloat const kSeparatorHeight = 1;
     [self setNeedsLayout];
 }
 
+- (void) setShowBackgroundEntire:(BOOL)showBackgroundEntire {
+    _showBackgroundEntire = showBackgroundEntire;
+    tokenField.reachLeftOnNewLine = showBackgroundEntire;
+    [self setNeedsLayout];
+}
+
 - (void)layoutSubviews {
 	
 	CGFloat relativeFieldHeight = tokenField.frame.size.height - self.contentOffset.y;
@@ -186,9 +193,9 @@ CGFloat const kSeparatorHeight = 1;
 
     CGFloat marginX = 3.0;
     CGFloat marginY = 3.0;
-    _backgroundImageView.frame = CGRectMake(CGRectGetMaxX(self.tokenField.promptLabel.frame)+marginX,
+    _backgroundImageView.frame = CGRectMake(_showBackgroundEntire ? marginX : CGRectGetMaxX(self.tokenField.promptLabel.frame)+marginX,
                                             marginY,
-                                            CGRectGetWidth(self.frame)- CGRectGetMaxX(self.tokenField.promptLabel.frame) - marginX*2.0,
+                                            CGRectGetWidth(self.frame) - marginX*2.0 - (_showBackgroundEntire ? 0.0 : CGRectGetMaxX(self.tokenField.promptLabel.frame)),
                                             CGRectGetHeight(self.tokenField.frame)-2*marginY);
 }
 
@@ -505,6 +512,7 @@ CGFloat const kSeparatorHeight = 1;
 @synthesize addButtonSelector;
 @synthesize addButtonTarget;
 @synthesize promptLabel = _promptLabel;
+@synthesize reachLeftOnNewLine = _reachLeftOnNewLine;
 
 - (id)initWithFrame:(CGRect)frame {
 	
@@ -544,6 +552,8 @@ CGFloat const kSeparatorHeight = 1;
 		[self setPromptText:@"To:"];
 		[self setText:kTextEmpty];
 		
+        _reachLeftOnNewLine = YES;
+        
 		tokensArray = [[NSMutableArray alloc] init];
     }
 	
@@ -620,7 +630,7 @@ CGFloat const kSeparatorHeight = 1;
 			numberOfLines++;
 			cursorLocation.x = leftMargin;
 			
-			if (numberOfLines > 1) cursorLocation.x = initialPadding;
+			if (numberOfLines > 1 && _reachLeftOnNewLine) cursorLocation.x = initialPadding;
 			cursorLocation.y += lineHeight;
 		}
 		
@@ -648,7 +658,7 @@ CGFloat const kSeparatorHeight = 1;
 		numberOfLines++;
 		cursorLocation.x = leftMargin;
 		
-		if (numberOfLines > 1) cursorLocation.x = initialPadding;
+		if (numberOfLines > 1 && _reachLeftOnNewLine) cursorLocation.x = initialPadding;
 		cursorLocation.y += lineHeight;
 	}
 	

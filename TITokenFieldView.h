@@ -90,6 +90,7 @@
 @property (nonatomic, readonly) TITokenField * tokenField;
 @property (nonatomic, assign) BOOL showSeparator;
 @property (nonatomic, retain) UIImage *backgroundStretchableImage;
+@property (nonatomic, assign) BOOL showBackgroundEntire;
 
 - (void)updateContentSize;
 @end
@@ -116,6 +117,7 @@
 @property (nonatomic, assign) id addButtonTarget;
 @property (nonatomic, assign) SEL addButtonSelector;
 @property (nonatomic, readonly) UILabel *promptLabel;
+@property (nonatomic, assign) BOOL reachLeftOnNewLine;
 
 - (void)addToken:(NSString *)title;
 - (void)removeToken:(TIToken *)token;
