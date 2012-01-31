@@ -123,7 +123,7 @@ CGFloat const kSeparatorHeight = 1;
 		
 		[self bringSubviewToFront:separator];
 		[self updateContentSize];
-	}
+    }
 	
     return self;
 }
@@ -327,7 +327,13 @@ CGFloat const kSeparatorHeight = 1;
 	[tokenField updateHeight:YES];
 	
 	if (untokSize.width > self.frame.size.width - 120){
-		untokenized = [NSString stringWithFormat:@"%d recipients", tokenTitles.count];
+        NSString *suffixe = nil;
+        if ([self.delegate respondsToSelector:@selector(tokenField:wantsToKnowSuffixForTokensNumber:)])
+            suffixe = [self.delegate tokenField:tokenField wantsToKnowSuffixForTokensNumber:tokenTitles.count];
+        else
+            suffixe = @"recipients";
+        
+		untokenized = [NSString stringWithFormat:@"%d %@", tokenTitles.count, suffixe];
 	}
 	
 	[textField setText:untokenized];

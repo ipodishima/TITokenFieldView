@@ -44,6 +44,8 @@
 - (void)tokenFieldTextDidChange:(TITokenField *)tokenField;
 - (void)tokenField:(TITokenField *)tokenField didFinishSearch:(NSArray *)matches;
 
+- (NSString*) tokenField:(TITokenField*)tokenField wantsToKnowSuffixForTokensNumber:(NSInteger)tokenNumber;
+
 - (UITableViewCell *)tokenField:(TITokenField *)tokenField resultsTableView:(UITableView *)tableView cellForObject:(id)object;
 - (CGFloat)tokenField:(TITokenField *)tokenField resultsTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -92,7 +94,6 @@
 @property (nonatomic, assign) BOOL showSeparator;
 @property (nonatomic, retain) UIImage *backgroundStretchableImage;
 @property (nonatomic, assign) BOOL showBackgroundEntire;
-
 - (void)updateContentSize;
 @end
 
